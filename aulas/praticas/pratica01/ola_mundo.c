@@ -1,3 +1,10 @@
+# Replit
+.breakpoints
+.ccls-cache/
+.replit
+
+b) Abra o arquivo README.md e altere o conteúdo com as seguintes linhas.
+
 # Algoritmos e Programação de Computadores I
 
 Repositório criado para as aulas teóricas e atividades práticas da discipina de Algoritmos e Programação de Computadores I.
@@ -47,3 +54,10 @@ gcc nome_do_arquivo.c -lm
 ```shell
 ./a.out
 ```
+
+#include <stdio.h>
+
+int main() {
+    printf("Olá, Mundo!\n");
+    return 0;
+    }
