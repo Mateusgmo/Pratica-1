@@ -2,8 +2,17 @@
 #include <string.h>
 #include <locale.h>
 
+#define MAX_PARTICIPANTES 100  // Limite máximo de participantes
+
+// Estrutura para armazenar o nome e a pontuação de cada participante
+typedef struct {
+    char nome[50];
+    int pontuacao;
+} Participante;
+
 int main() {
     setlocale(LC_ALL, "");
+    
     // Definindo perguntas e respostas do quiz sobre engenharia civil
     char perguntas[10][256] = {
         "1. Qual é a unidade padrão de força no SI?\n a) Joule\n b) Newton\n c) Pascal\n d) Kilograma",
@@ -17,16 +26,21 @@ int main() {
         "9. Qual destes é um método de sondagem em solos?\n a) SPT\n b) Esclerometria\n c) Ultrassom\n d) Schmidt",
         "10. O que indica uma fissura coesiva em argamassa?\n a) Falha na superfície\n b) Quebra do substrato\n c) Problema de adesão\n d) Carga inadequada"
     };
-
+    
     char respostas[10] = {'b', 'c', 'c', 'd', 'c', 'a', 'b', 'c', 'a', 'a'};
+    
+    Participante ranking[MAX_PARTICIPANTES];  // Array para armazenar o ranking
+    int totalParticipantes = 0;               // Contador de participantes no ranking
+
     char escolha;
     int pontos = 0;
+    char nome[50];
 
     // Loop principal do menu
     while (1) {
         printf("\nMenu Principal:\n");
         printf("1. Iniciar Quiz\n");
-        printf("2. Exibir Resultado\n");
+        printf("2. Exibir Ranking\n");
         printf("3. Sair\n");
         printf("Escolha uma opcao: ");
         scanf(" %c", &escolha);
@@ -36,8 +50,12 @@ int main() {
             printf("Opcao invalida! Escolha entre 1 e 3.\n");
             continue;
         }
-
+        
         if (escolha == '1') {
+            // Obtendo o nome do participante
+            printf("Digite seu nome: ");
+            scanf(" %49[^\n]", nome);
+
             // Iniciando o quiz
             pontos = 0;  // Redefine a pontuação antes de cada novo quiz
             char resposta;
@@ -61,12 +79,33 @@ int main() {
                     printf("Incorreto. A resposta correta era: %c\n", respostas[i]);
                 }
             }
-            printf("\nQuiz concluído!\n");
+            
+            // Armazenando o nome e a pontuação do participante no ranking
+            strcpy(ranking[totalParticipantes].nome, nome);
+            ranking[totalParticipantes].pontuacao = pontos;
+            totalParticipantes++;
+
+            printf("\nQuiz concluído! Você acertou %d de 10 perguntas!\n", pontos);
 
         } else if (escolha == '2') {
-            // Exibindo o resultado final
-            printf("\nVocê acertou %d de 10 perguntas!\n", pontos);
-            pontos = 0;  // Redefine a pontuação após exibir o resultado
+            // Exibindo o ranking
+            printf("\nRanking dos Participantes:\n");
+            
+            // Ordenando o ranking por pontuação em ordem decrescente
+            for (int i = 0; i < totalParticipantes - 1; i++) {
+                for (int j = i + 1; j < totalParticipantes; j++) {
+                    if (ranking[j].pontuacao > ranking[i].pontuacao) {
+                        Participante temp = ranking[i];
+                        ranking[i] = ranking[j];
+                        ranking[j] = temp;
+                    }
+                }
+            }
+
+            // Imprimindo o ranking ordenado
+            for (int i = 0; i < totalParticipantes; i++) {
+                printf("%d. %s - %d pontos\n", i + 1, ranking[i].nome, ranking[i].pontuacao);
+            }
         } else if (escolha == '3') {
             // Sair do programa
             printf("Saindo do programa.\n");
